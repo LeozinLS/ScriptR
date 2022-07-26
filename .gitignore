@@ -1,0 +1,157 @@
+#---------------------------------- PARTE 1 ------------ ----------##
+
+# ###### Questão 1 #######
+
+dados  <- read.csv2( " UF_AP.csv " )
+
+# ###### Questão 2 #######
+
+str( dados )
+
+# # de V3 à v10 e de v12 à v14 são variáveis ​​inteiras, já as variáveis ​​v11 e v15 são numéricas e uf é uma
+# # caractere variável
+dados <- dados [, - 1 ]
+dados
+
+# ###### Questão 3 #######
+
+nomes( dados ) <- c( " sexo " , " Idade " , " Trab_semana " , " Horas_trab " , " Anos_trab " , " Meses_trab " , " Anos_estudo " ,
+                " PosOcup " , " Rend_mensal " , " G_Anos_estudos " , " N_dom " , " Instruc " , " Rend_mensal_pc " , " uf " )
+
+# ###### Questão 4 #######
+
+dados $ sexo <- factor ( dados $ sexo , levels = c( 2 , 4 ), labels = c( " Masculino " , " Feminino " ))
+dados $ Trab_semana  <-  factor ( dados $ Trab_semana , levels  = c( 1 , 3 ), labels  = c( " Sim " , " Não " ))
+dados $ Anos_estudo  <-  factor ( dados $ Anos_estudo , níveis  = c( 01 , 02 , 03 , 04 , 05 , 06 , 07 , 08 , 09 , 10 , 11 , 12 , 13 , 14 , 15 , 16 , 17 ), labels  = c( " Sem instrução e menos de 1 ano " ,
+                                                                                                                             " 1 ano " , " 2 anos " , " 3 anos " , " 4 anos " ,
+                                                                                                                             " 5 anos " , " 6 anos " , " 7 anos " , " 8 anos " ,
+                                                                                                                             " 9 anos " , " 10 anos " , " 11 anos " , " 12 anos " ,
+                                                                                                                             " 13 anos " , " 14 anos " , " 15 anos ou mais " ,
+                                                                                                                             " Não determinado " ))
+dados $ PosOcup  <-  factor ( dados $ PosOcup , levels  = c( 01 , 02 , 03 , 04 , 06 , 07 , 09 , 10 , 11 , 12 , 13 ) , labels  = c( " Empregado com carteira de trabalho assinada " , " Militar " ,
+                                                                                                   " Funcionário público estatutário " , " Outro empregado sem carteira de trabalho assinada " ,
+                                                                                                   " Trabalhador doméstico com carteira de trabalho assinada " ,
+                                                                                                   " Trabalhador doméstico sem carteira de trabalho assinada " ,
+                                                                                                   " Conta própria " , " Empregador " , " Não remunerado " ,
+                                                                                                   " Trabalhador na produção para o próprio consumo " ,
+                                                                                                   " Trabalhador na construção para o próprio uso " ))
+dados $ G_Anos_estudos  <-  factor ( dados $ G_Anos_estudos , levels  = c( 1 , 2 , 3 , 4 , 5 , 6 , 7 ), labels  = c( " Sem instrução e menos de 1 ano " ,
+                                                                                           " 1 a 3 anos " , " 4 a 7 anos " , " 8 a 10 anos "
+                                                                                           , " 11 a 14 anos " , " 15 anos ou mais " , " Não Determinado
+                                                                                           " ))
+
+dados $ Instruc  <-  factor ( dados $ Instruc , levels  = c( 1 , 2 , 3 , 4 , 5 , 6 , 7 , 8 ), labels  = c( " Sem instrução " , " Fundamental incompleto ou equivalente
+                                                                                " , " Fundamental completo ou equivalente " ,
+                                                                                " Médio incompleto ou equivalente " , " Médio completo ou equivalente " ,
+                                                                                " Superior incompleto ou equivalente " , " Superior completo " , " Não determinado " ))
+# ###### QUESTÃO 5 #######
+
+dados  <-  dados [ dados $ Idade  > =  10 , ]
+
+####### QUESTÃO 6 #######
+
+dados  <-  dados [ dados $ Trab_semana == " Sim " , ]  
+
+# ###### QUESTÃO 7 #######
+
+dados $ Rend_mensal [ dados $ Rend_mensal  ==  999999999999 ] <-  NA
+dados $ Rend_mensal_pc [ dados $ Rend_mensal_pc  ==  999999999999 ] <-  NA
+# # Foi necessário uma troca dos valores NA pois esses valores iriam influenciar na hora de analisar a variável em questão, como por exemplo na média,
+# # iria puxar muito a média para cima, o que não representaria de maneira correta.
+
+# #---------------------------------- PARTE 2 ------------ ----------##
+
+# ###### QUESTÃO 8 #######
+
+# Esquema dos 5 números
+# Variavéis Quantitativas -> Renda, idade, anos,meses, e horas trabalhadas, anos de estudo, número de domicílios
+resumo( dados $ Horas_trab )
+resumo( dados $ Anos_trab )
+resumo( dados $ Meses_trab )
+resumo( dados $ Idade )
+resumo( dados $ Rend_mensal )
+resumo( dados $ Rend_mensal_pc )
+resumo( dados $ N_dom )
+
+#tabela de frequência
+# variáveis ​​qualitativas -> G_anos de estudo, instrução, posição ocupada, sexo.
+tabela( dados $ sexo )
+table( dados $ PosOcup )
+tabela( dados $ Anos_estudo )
+table( dados $ G_Anos_estudos )
+tabela( dados $ Instrução )
+
+# ###### QUESTÃO 9 #######
+
+dados  <-  dados [ dados $ Rend_mensal ! = 0 , ]  
+resumo( dados $ Rend_mensal )
+# # o mínimo, mediana e média maior não e o 1º quartil e o máximo se mantido, já que esses dados que foram retirados foram interfiriam.
+
+# ###### QUESTÃO 10 #######
+
+# # De acordo com as tabelas de frequência veiculadas na questão 8, temos a maior frequência em:
+# # sexo: Masculino
+# # Anos de estudo: 11 anos
+# # posição ocupada ocupada: Empregado com carteira de trabalho
+# # Grupo de anos de estudo: 11 a 14 anos
+# # instrução: médio completo ou equivalente
+
+# # frequencias relativas
+round( 100 * prop.table(table( dados $ sexo )))
+round( 100 * prop.table(table( dados $ PosOcup )))
+round( 100 * prop.table(table( dados $ Anos_estudo ))))
+round( 100 * prop.table(table( dados $ G_Anos_estudos ))))
+round( 100 * prop.table(table( dados $ Instruc )))
+
+
+# ###### QUESTÃO 11 #######
+
+
+
+
+# ###### QUESTÃO 12 #######
+
+biblioteca ( ggplot2 )
+biblioteca ( remodelar2 )
+ggplot( dados , aes( $ Rend_mensal , dados $ uf ) ) +
+  geom_boxplot() + coord_flip()
+ggplot( dados , aes( $ Rend_mensal , dados $ sexo ) ) +
+  geom_boxplot() + coord_flip()
+ggplot( dados , aes( $ Rend_mensal , dados $ Anos_estudo ) ) +
+  geom_boxplot() + coord_flip()
+ggplot( dados , aes( $ Rend_mensal , dados $ PosOcup ) ) +
+  geom_boxplot() + coord_flip()
+ggplot( dados , aes( $ Rend_mensal , dados $ G_Anos_estudos ) ) +
+  geom_boxplot() + coord_flip()
+ggplot( dados , aes( $ Rend_mensal , dados $ Instruc ) ) +
+  geom_boxplot() + coord_flip()
+
+
+# # Quanto maior o grau de escolaridade, anos de estudo e melhor posição ocupada, maior a renda mensal.
+# # em média, os homens ganham mais que as mulheres.
+
+
+####### QUESTÃO 13 #######
+
+q  <- quantil( dados $ Rend_mensal , c( .95 ), na.rm  =  T )
+novos_dados  <-  dados [ dados $ Rend_mensal  < =  q , ]
+
+# ###### QUESTÃO 14 #######
+
+ggplot( novos_dados , aes( novos_dados $ Rend_mensal , novos_dados $ uf )) +
+  geom_boxplot() + coord_flip()
+ggplot( novos_dados , aes( novos_dados $ Rend_mensal , novos_dados $ sexo )) +
+  geom_boxplot() + coord_flip()
+ggplot( novos_dados , aes( novos_dados $ Rend_mensal , novos_dados $ Anos_estudo )) +
+  geom_boxplot() + coord_flip()
+ggplot( novos_dados , aes( novos_dados $ Rend_mensal , novos_dados $ PosOcup )) +
+  geom_boxplot() + coord_flip()
+ggplot( novos_dados , aes( novos_dados $ Rend_mensal , novos_dados $ G_Anos_estudos )) +
+  geom_boxplot() + coord_flip()
+ggplot( novos_dados , aes( novos_dados $ Rend_mensal , novos_dados $ Instruc )) +
+  geom_boxplot() + coord_flip()
+
+
+# # foi observado o mesmo que foi feito no item 12
+
+# ###### QUESTÃO 15 #######
